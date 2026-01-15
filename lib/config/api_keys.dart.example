@@ -1,0 +1,4 @@
+// api_keys.dart파일 만들어서 아래 내용 입력
+class ApiKeys {
+  static const String naverMapClientId = '네이버 맵 클라이언트 아이디';
+}

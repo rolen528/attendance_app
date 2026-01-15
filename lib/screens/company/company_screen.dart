@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/company_model.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 class CompanyScreen extends StatefulWidget {
   const CompanyScreen({super.key});
@@ -100,6 +101,17 @@ class _CompanyScreenState extends State<CompanyScreen> {
                   );
                 },
               ),
+            ),
+            NaverMap(
+              options: const NaverMapViewOptions(
+                initialCameraPosition: NCameraPosition(
+                  target: NLatLng(37.5665, 126.9780), // 서울시청
+                  zoom: 15,
+                ),
+              ),
+              onMapReady: (controller) {
+                print("네이버 지도 로드 완료");
+              },
             ),
           ],
         ),

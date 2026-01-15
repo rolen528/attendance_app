@@ -43,3 +43,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+# 환경 변수 파일 (중요!)
+.env
+.env.local
+.env.production
+android/local.properties
+ios/Flutter/flutter_export_environment.sh
+
+# API 키가 포함된 파일
+lib/config/api_keys.dart
+android/app/src/main/res/values/secrets.xml

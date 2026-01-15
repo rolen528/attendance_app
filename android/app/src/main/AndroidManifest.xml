@@ -3,6 +3,9 @@
         android:label="attendance_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+<!--        <meta-data-->
+<!--            android:name="com.naver.maps.map.CLIENT_ID"-->
+<!--            android:value="vcitbelaii"/>-->
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -3,9 +3,11 @@ import '../models/user_model.dart';
 
 class AuthService {
   // 가짜 회원 명부 (나중에 실제 서버로 대체됨)
+  // company_id 누락되어 임시로 추가해뒀습니다!
   final List<Map<String, dynamic>> _dummyDb = [
     {
       "id": 1,
+      "company_id": 2,
       "name": "최성현",
       "phone": "01011111111",
       "password": "1234",
@@ -14,6 +16,7 @@ class AuthService {
     },
     {
       "id": 2,
+      "company_id": 3,
       "name": "박정윤",
       "phone": "01022222222",
       "password": "1234",
@@ -22,6 +25,7 @@ class AuthService {
     },
     {
       "id": 3,
+      "company_id": 1,
       "name": "손흥민",
       "phone": "01033333333",
       "password": "1234",
