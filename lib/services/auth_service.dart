@@ -6,6 +6,7 @@ class AuthService {
   final List<Map<String, dynamic>> _dummyDb = [
     {
       "id": 1,
+      "company_id": 100,
       "name": "최성현",
       "phone": "01011111111",
       "password": "1234",
@@ -14,6 +15,7 @@ class AuthService {
     },
     {
       "id": 2,
+      "company_id": 100,
       "name": "박정윤",
       "phone": "01022222222",
       "password": "1234",
@@ -22,6 +24,7 @@ class AuthService {
     },
     {
       "id": 3,
+      "company_id": 200,
       "name": "손흥민",
       "phone": "01033333333",
       "password": "1234",
