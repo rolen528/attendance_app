@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../services/auth_service.dart';
 import '../../models/user_model.dart';
 import '../company/company_screen.dart';
+import '../home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -44,6 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
       // 성공 알림
       Get.snackbar("로그인 성공", "${user.name}님 환영합니다!",
           backgroundColor: Colors.greenAccent, snackPosition: SnackPosition.TOP);
+      // 화면 이동
+      Get.offAll(() => const HomeScreen());
 
     } else {
       // 실패 알림
