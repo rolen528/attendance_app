@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: false, // 기존 스타일 유지
         primarySwatch: Colors.blue,
       ),
-      home: const MapTest(), // <--- 시작 화면을 로그인 화면으로 지정!
+      home: const LoginScreen(), // <--- 시작 화면을 로그인 화면으로 지정!
     );
   }
 }

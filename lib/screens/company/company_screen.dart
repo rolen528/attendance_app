@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/company_model.dart';
-<<<<<<< HEAD
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-=======
 import '../login/signup_screen.dart';
->>>>>>> feature/login
 
 class CompanyScreen extends StatefulWidget {
   const CompanyScreen({super.key});

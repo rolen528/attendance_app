@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Get.snackbar("로그인 성공", "${user.name}님 환영합니다!",
           backgroundColor: Colors.greenAccent, snackPosition: SnackPosition.TOP);
       // 화면 이동
-      Get.offAll(() => const HomeScreen());
+      Get.offAll(() => const HomeScreen(), arguments: user);
 
     } else {
       // 실패 알림

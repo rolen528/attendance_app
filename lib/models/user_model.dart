@@ -2,6 +2,7 @@
 
 class UserModel {
   final int id;
+  final int company_id;
   final String name;
   final String phone;
   final int role;   // 0: 관리자(사장), 1: 직원
@@ -9,6 +10,7 @@ class UserModel {
 
   UserModel({
     required this.id,
+    required this.company_id,
     required this.name,
     required this.phone,
     required this.role,
@@ -19,6 +21,7 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
+      company_id: json['company_id'],
       name: json['name'],
       phone: json['phone'],
       role: json['role'],
