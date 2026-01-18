@@ -6,6 +6,9 @@ import '../../services/auth_service.dart';
 import '../../models/user_model.dart';
 import '../company/company_screen.dart';
 import '../home/home_screen.dart';
+import '../company/create_company_screen.dart';
+
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -114,9 +117,51 @@ class _LoginScreenState extends State<LoginScreen> {
               // 회원가입 버튼
               TextButton(
                 onPressed: () {
-                  Get.to(() => const CompanyScreen());
+                  // 하단에서 올라오는 선택창 (Bottom Sheet)
+                  Get.bottomSheet(
+                    Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(20),
+                      height: 250, // 높이 적당히
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("회원가입 유형 선택",
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 20),
+
+                          // 선택 1: 사장님
+                          ListTile(
+                            leading: const Icon(Icons.store, size: 40, color: Colors.indigo),
+                            title: const Text("사장님으로 시작하기"),
+                            subtitle: const Text("회사를 새로 등록하고 관리합니다."),
+                            onTap: () {
+                              Get.back(); // 창 닫고
+                              Get.to(() => const CreateCompanyScreen()); // 회사 생성 화면으로!
+                            },
+                          ),
+                          const Divider(), // 구분선
+
+                          // 선택 2: 직원
+                          ListTile(
+                            leading: const Icon(Icons.person_search, size: 40, color: Colors.blue),
+                            title: const Text("직원으로 시작하기"),
+                            subtitle: const Text("이미 등록된 회사를 찾아 가입합니다."),
+                            onTap: () {
+                              Get.back(); // 창 닫고
+                              Get.to(() => const CompanyScreen()); // 회사 검색 화면으로!
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                  );
                 },
-                child: const Text("처음이신가요? 회원가입 (회사찾기)"),
+                child: const Text("처음이신가요? 회원가입"),
               ),
             ],
           ),

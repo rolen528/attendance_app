@@ -1,3 +1,5 @@
+// lib/screens/company/company_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/company_model.dart';
@@ -13,40 +15,75 @@ class CompanyScreen extends StatefulWidget {
 class _CompanyScreenState extends State<CompanyScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  // 가짜 회사 리스트 (나중엔 서버에서 받아옵니다)
+  // (추가) 팝업창에서 쓸 입장 코드 입력기
+  final TextEditingController _codeController = TextEditingController();
+
+  // 가짜 데이터 (아까 수정한 bizNum, code 포함된 버전)
   final List<CompanyModel> _allCompanies = [
-    CompanyModel(id: 1, name: "제이에스 유통", address: "시흥시 정왕동 123", ownerName: "김사장"),
-    CompanyModel(id: 2, name: "시흥 사이언스", address: "안산시 단원구 456", ownerName: "이대표"),
-    CompanyModel(id: 3, name: "정왕 테크", address: "시흥시 배곧동 789", ownerName: "박이사"),
-    CompanyModel(id: 4, name: "지스 무역", address: "서울시 강남구 000", ownerName: "최회장"),
+    CompanyModel(id: 1, name: "대박 유통", address: "시흥시 정왕동 123", ownerName: "김사장", bizNum: "123-45-67890", code: "1111"),
+    CompanyModel(id: 2, name: "안산 정밀", address: "안산시 단원구 456", ownerName: "박대표", bizNum: "222-22-22222", code: "2222"),
+    CompanyModel(id: 3, name: "시흥 테크", address: "시흥시 배곧동 789", ownerName: "이이사", bizNum: "333-33-33333", code: "7777"),
   ];
 
-  // 화면에 보여줄 검색 결과 리스트
   List<CompanyModel> _filteredCompanies = [];
 
   @override
   void initState() {
     super.initState();
-    _filteredCompanies = _allCompanies; // 처음엔 모든 회사 보여주기
+    _filteredCompanies = _allCompanies;
   }
 
-  // 검색 기능
   void _runSearch(String keyword) {
     setState(() {
       if (keyword.isEmpty) {
         _filteredCompanies = _allCompanies;
       } else {
         _filteredCompanies = _allCompanies
-            .where((company) => company.name.contains(keyword)) // 이름에 글자가 포함되면 찾음
+            .where((company) => company.name.contains(keyword))
             .toList();
       }
     });
   }
 
-  // 가입 신청 화면 연결
-  void _goToSignUp(CompanyModel company) {
-    // 선택한 회사 정보를 들고 회원가입 화면으로 이동!
-    Get.to(() => SignUpScreen(company: company));
+  // ★★★ (새로 만든 함수) 입장 코드 확인 팝업 ★★★
+  void _showCodeDialog(CompanyModel company) {
+    _codeController.clear(); // 팝업 열 때마다 입력창 비우기
+
+    Get.defaultDialog(
+      title: "보안 확인",
+      titleStyle: const TextStyle(fontWeight: FontWeight.bold),
+      content: Column(
+        children: [
+          const Text("사내 공지된 입장 코드를 입력하세요."),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _codeController,
+            obscureText: true, // 비밀번호처럼 가리기
+            keyboardType: TextInputType.number, // 숫자 키패드
+            decoration: const InputDecoration(
+              hintText: "코드 4자리 (예: 1111)",
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+            ),
+          ),
+        ],
+      ),
+      textConfirm: "확인",
+      textCancel: "취소",
+      confirmTextColor: Colors.white,
+      onConfirm: () {
+        // 코드 검사 로직
+        if (_codeController.text == company.code) {
+          // 정답! -> 팝업 닫고 -> 회원가입 화면으로 이동
+          Get.back();
+          Get.to(() => SignUpScreen(company: company));
+        } else {
+          // 땡! -> 안내 메시지
+          Get.snackbar("오류", "입장 코드가 일치하지 않습니다.",
+              backgroundColor: Colors.redAccent, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM);
+        }
+      },
+    );
   }
 
   @override
@@ -57,10 +94,9 @@ class _CompanyScreenState extends State<CompanyScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // 검색창
             TextField(
               controller: _searchController,
-              onChanged: _runSearch, // 글자 칠 때마다 검색 실행
+              onChanged: _runSearch,
               decoration: const InputDecoration(
                 labelText: "회사 이름 검색",
                 hintText: "예: 시흥, 안산",
@@ -69,8 +105,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // 리스트 보여주기
             Expanded(
               child: _filteredCompanies.isEmpty
                   ? const Center(child: Text("검색된 회사가 없습니다."))
@@ -83,10 +117,11 @@ class _CompanyScreenState extends State<CompanyScreen> {
                     child: ListTile(
                       leading: const Icon(Icons.business, size: 40, color: Colors.indigo),
                       title: Text(company.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text("${company.address}\n대표: ${company.ownerName}"),
-                      isThreeLine: true,
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () => _goToSignUp(company), // 누르면 가입 신청
+                      subtitle: Text(company.address),
+                      trailing: const Icon(Icons.lock_outline, color: Colors.grey), // 자물쇠 아이콘으로 변경
+
+                      // ★★★ 클릭하면 팝업 함수 실행 ★★★
+                      onTap: () => _showCodeDialog(company),
                     ),
                   );
                 },
