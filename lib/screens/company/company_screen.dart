@@ -1,9 +1,11 @@
-// lib/screens/company/company_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/company_model.dart';
+<<<<<<< HEAD
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+=======
+import '../login/signup_screen.dart';
+>>>>>>> feature/login
 
 class CompanyScreen extends StatefulWidget {
   const CompanyScreen({super.key});
@@ -15,50 +17,40 @@ class CompanyScreen extends StatefulWidget {
 class _CompanyScreenState extends State<CompanyScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  // 가짜 회사 데이터 (나중에 서버에서 받아올 것들)
+  // 가짜 회사 리스트 (나중엔 서버에서 받아옵니다)
   final List<CompanyModel> _allCompanies = [
-    CompanyModel(id: 1, name: "대박 유통", address: "시흥시 정왕동", ownerName: "김사장"),
-    CompanyModel(id: 2, name: "안산 정밀", address: "안산시 단원구", ownerName: "박대표"),
-    CompanyModel(id: 3, name: "시흥 테크", address: "시흥시 배곧동", ownerName: "이이사"),
+    CompanyModel(id: 1, name: "제이에스 유통", address: "시흥시 정왕동 123", ownerName: "김사장"),
+    CompanyModel(id: 2, name: "시흥 사이언스", address: "안산시 단원구 456", ownerName: "이대표"),
+    CompanyModel(id: 3, name: "정왕 테크", address: "시흥시 배곧동 789", ownerName: "박이사"),
+    CompanyModel(id: 4, name: "지스 무역", address: "서울시 강남구 000", ownerName: "최회장"),
   ];
 
-  // 검색 결과 보여줄 리스트
+  // 화면에 보여줄 검색 결과 리스트
   List<CompanyModel> _filteredCompanies = [];
 
   @override
   void initState() {
     super.initState();
-    _filteredCompanies = _allCompanies; // 처음엔 다 보여줌
+    _filteredCompanies = _allCompanies; // 처음엔 모든 회사 보여주기
   }
 
-  // 검색 로직
-  void _searchCompany(String query) {
+  // 검색 기능
+  void _runSearch(String keyword) {
     setState(() {
-      if (query.isEmpty) {
+      if (keyword.isEmpty) {
         _filteredCompanies = _allCompanies;
       } else {
         _filteredCompanies = _allCompanies
-            .where((company) => company.name.contains(query))
+            .where((company) => company.name.contains(keyword)) // 이름에 글자가 포함되면 찾음
             .toList();
       }
     });
   }
 
-  // 가입 신청 팝업
-  void _showJoinDialog(CompanyModel company) {
-    Get.defaultDialog(
-      title: "가입 신청",
-      middleText: "${company.name}에 입사 신청하시겠습니까?\n(사장님 승인 후 로그인 가능)",
-      textConfirm: "신청하기",
-      textCancel: "취소",
-      confirmTextColor: Colors.white,
-      onConfirm: () {
-        Get.back(); // 다이얼로그 닫기
-        Get.back(); // 로그인 화면으로 돌아가기
-        Get.snackbar("완료", "가입 신청이 완료되었습니다. 승인을 기다려주세요.",
-            backgroundColor: Colors.green, colorText: Colors.white);
-      },
-    );
+  // 가입 신청 화면 연결
+  void _goToSignUp(CompanyModel company) {
+    // 선택한 회사 정보를 들고 회원가입 화면으로 이동!
+    Get.to(() => SignUpScreen(company: company));
   }
 
   @override
@@ -72,16 +64,17 @@ class _CompanyScreenState extends State<CompanyScreen> {
             // 검색창
             TextField(
               controller: _searchController,
-              onChanged: _searchCompany, // 글자 칠 때마다 검색 실행
+              onChanged: _runSearch, // 글자 칠 때마다 검색 실행
               decoration: const InputDecoration(
                 labelText: "회사 이름 검색",
+                hintText: "예: 시흥, 안산",
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
 
-            // 회사 리스트
+            // 리스트 보여주기
             Expanded(
               child: _filteredCompanies.isEmpty
                   ? const Center(child: Text("검색된 회사가 없습니다."))
@@ -92,11 +85,12 @@ class _CompanyScreenState extends State<CompanyScreen> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 10),
                     child: ListTile(
-                      leading: const Icon(Icons.business, size: 40),
+                      leading: const Icon(Icons.business, size: 40, color: Colors.indigo),
                       title: Text(company.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text("${company.address} | 대표: ${company.ownerName}"),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () => _showJoinDialog(company),
+                      subtitle: Text("${company.address}\n대표: ${company.ownerName}"),
+                      isThreeLine: true,
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => _goToSignUp(company), // 누르면 가입 신청
                     ),
                   );
                 },

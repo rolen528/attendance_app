@@ -2,9 +2,9 @@
 
 class CompanyModel {
   final int id;
-  final String name;
-  final String address;
-  final String ownerName;
+  final String name;      // 회사
+  final String address;   // 주소
+  final String ownerName; // 회사 대표님 이름
 
   CompanyModel({
     required this.id,

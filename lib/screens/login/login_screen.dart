@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/auth_service.dart';
 import '../../models/user_model.dart';
+import '../company/company_screen.dart';
+import '../home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -43,6 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
       // 성공 알림
       Get.snackbar("로그인 성공", "${user.name}님 환영합니다!",
           backgroundColor: Colors.greenAccent, snackPosition: SnackPosition.TOP);
+      // 화면 이동
+      Get.offAll(() => const HomeScreen());
 
     } else {
       // 실패 알림
@@ -102,6 +106,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                   child: const Text("로그인", style: TextStyle(color: Colors.white, fontSize: 16)),
                 ),
+              ),
+
+              // 회원가입
+              const SizedBox(height: 10), //  버튼 사이 간격
+
+              // 회원가입 버튼
+              TextButton(
+                onPressed: () {
+                  Get.to(() => const CompanyScreen());
+                },
+                child: const Text("처음이신가요? 회원가입 (회사찾기)"),
               ),
             ],
           ),
