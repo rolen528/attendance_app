@@ -4,11 +4,13 @@
 <dict>
 
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>출퇴근 기록을 위해 위치 정보가 필요합니다.</string>
+    <string>출퇴근 체크를 위해 현재 위치 정보가 필요합니다.</string>
 
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>출퇴근 기록을 위해 위치 정보가 필요합니다.</string>
+    <string>출퇴근 체크를 위해 위치 정보가 필요합니다.</string>
 
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>백그라운드에서도 출퇴근 체크를 위해 위치 정보가 필요합니다.</string>
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

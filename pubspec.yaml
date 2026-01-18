@@ -39,6 +39,8 @@ dependencies:
   get: ^4.7.3
   google_maps_flutter: ^2.14.0
   google_maps_flutter_web: ^0.5.14+3
+  geolocator: ^11.0.0  # GPS
+  permission_handler: ^11.0.1  # 권한
 
 dev_dependencies:
   flutter_test:
