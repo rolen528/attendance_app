@@ -55,3 +55,10 @@ ios/Flutter/flutter_export_environment.sh
 # API 키가 포함된 파일
 lib/config/api_keys.dart
 android/app/src/main/res/values/secrets.xml
+
+# 용량 이슈에 의해 추가하는 부분
+notepad .gitignore
+
+windows/flutter/ephemeral/
+**/flutter_windows.dll.pdb
+# 용량 이슈에 의해 추가하는 부분
