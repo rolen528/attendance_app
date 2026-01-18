@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/company_model.dart';
+import '../login/signup_screen.dart';
 
 class CompanyScreen extends StatefulWidget {
   const CompanyScreen({super.key});
@@ -42,21 +43,10 @@ class _CompanyScreenState extends State<CompanyScreen> {
     });
   }
 
-  // 가입 신청 팝업
-  void _showJoinDialog(CompanyModel company) {
-    Get.defaultDialog(
-      title: "가입 신청",
-      middleText: "[${company.name}]\n\n이 회사로 가입 신청을 보낼까요?\n사장님이 승인하면 로그인이 가능해집니다.",
-      textConfirm: "신청하기",
-      textCancel: "취소",
-      confirmTextColor: Colors.white,
-      onConfirm: () {
-        Get.back(); // 팝업 닫기
-        Get.back(); // 로그인 화면으로 돌아가기
-        Get.snackbar("신청 완료", "사장님께 승인 요청을 보냈습니다.",
-            backgroundColor: Colors.green, colorText: Colors.white);
-      },
-    );
+  // 가입 신청 화면 연결
+  void _goToSignUp(CompanyModel company) {
+    // 선택한 회사 정보를 들고 회원가입 화면으로 이동!
+    Get.to(() => SignUpScreen(company: company));
   }
 
   @override
@@ -96,7 +86,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                       subtitle: Text("${company.address}\n대표: ${company.ownerName}"),
                       isThreeLine: true,
                       trailing: const Icon(Icons.chevron_right),
-                      onTap: () => _showJoinDialog(company), // 누르면 가입 신청
+                      onTap: () => _goToSignUp(company), // 누르면 가입 신청
                     ),
                   );
                 },
