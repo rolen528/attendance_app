@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final userController = Get.put(UserController());
       userController.setUser(result['user']); // 유저 정보 저장 꾹!
 
-      // 성공! -> 메인 화면으로 이동
+      // 성공 -> 메인 화면으로 이동
       Get.offAll(() => const HomeScreen());
     } else {
       // 실패 (비번 틀림, 승인 대기 등) -> 에러 메시지 띄우기

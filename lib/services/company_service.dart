@@ -12,8 +12,8 @@ class CompanyService {
       bizNum: "123-45-67890",
       code: "1111",
       // 지도를 띄울 좌표 (예시 데이터 시흥 정왕동 근처)
-      latitude: 37.3496,
-      longitude: 126.7335,
+      latitude: 37.3364952,
+      longitude: 126.6917637,
     ),
     CompanyModel(
       id: 200,

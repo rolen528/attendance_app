@@ -15,10 +15,10 @@ class CompanyScreen extends StatefulWidget {
 class _CompanyScreenState extends State<CompanyScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  // (추가) 팝업창에서 쓸 입장 코드 입력기
+  // 팝업창에서 쓸 입장 코드 입력기
   final TextEditingController _codeController = TextEditingController();
 
-  // 가짜 데이터 (아까 수정한 bizNum, code 포함된 버전)
+  // 가짜 데이터
   final List<CompanyModel> _allCompanies = [
     CompanyModel(id: 1, name: "대박 유통", address: "시흥시 정왕동 123", ownerName: "김사장", bizNum: "123-45-67890", code: "1111"),
     CompanyModel(id: 2, name: "안산 정밀", address: "안산시 단원구 456", ownerName: "박대표", bizNum: "222-22-22222", code: "2222"),
@@ -45,7 +45,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
     });
   }
 
-  // ★★★ (새로 만든 함수) 입장 코드 확인 팝업 ★★★
+  // 입장 코드 확인 팝업
   void _showCodeDialog(CompanyModel company) {
     _codeController.clear(); // 팝업 열 때마다 입력창 비우기
 
@@ -74,7 +74,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
       onConfirm: () {
         // 코드 검사 로직
         if (_codeController.text == company.code) {
-          // 정답! -> 팝업 닫고 -> 회원가입 화면으로 이동
+          // 올바른 코드 -> 팝업 닫고 -> 회원가입 화면으로 이동
           Get.back();
           Get.to(() => SignUpScreen(company: company));
         } else {
@@ -120,7 +120,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                       subtitle: Text(company.address),
                       trailing: const Icon(Icons.lock_outline, color: Colors.grey), // 자물쇠 아이콘으로 변경
 
-                      // ★★★ 클릭하면 팝업 함수 실행 ★★★
+                      // 클릭하면 팝업 함수 실행
                       onTap: () => _showCodeDialog(company),
                     ),
                   );

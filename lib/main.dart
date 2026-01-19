@@ -8,12 +8,9 @@ void main() async {
   // 1. 플러터 엔진 초기화
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 2. 네이버 지도 초기화 (API 키를 넣기!)
-  await NaverMapSdk.instance.initialize(
-      clientId: "f4z9kzyi7q", // 인증키
-      onAuthFailed: (ex) {
-        print("네이버 지도 인증 실패: $ex");
-      }
+  // 2. 네이버 지도 초기화 (API 키 넣기)
+  await FlutterNaverMap().init(
+    clientId: 'f4z9kzyi7q',
   );
 
   runApp(const MyApp());
