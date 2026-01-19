@@ -2,8 +2,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'screens/login/login_screen.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 
-void main() {
+void main() async {
+  // 1. 플러터 엔진 초기화
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 2. 네이버 지도 초기화 (API 키를 넣기!)
+  await NaverMapSdk.instance.initialize(
+      clientId: "f4z9kzyi7q", // 인증키
+      onAuthFailed: (ex) {
+        print("네이버 지도 인증 실패: $ex");
+      }
+  );
+
   runApp(const MyApp());
 }
 
