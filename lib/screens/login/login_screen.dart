@@ -1,14 +1,8 @@
-// lib/screens/login/login_screen.dart
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../services/auth_service.dart';
-import '../../models/user_model.dart';
-import '../company/company_screen.dart';
-import '../home/home_screen.dart';
-import '../company/create_company_screen.dart';
-
-
+import '../../services/auth_service.dart'; // 로그인 엔진 가져오기
+import '../home/home_screen.dart'; // 로그인 성공시
+import '../../controllers/user_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,43 +12,58 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _phoneController = TextEditingController(); // 전화번호 입력기
-  final _pwController = TextEditingController();    // 비번 입력기
-  final AuthService _authService = AuthService();   // 가짜 서버 데이터 가져오기
+  // 1. 입력창 컨트롤러 (전화번호, 비번)
+  final _phoneController = TextEditingController();
+  final _pwController = TextEditingController();
 
+  // 2. 우리가 만든 로그인 엔진 준비
+  final _authService = AuthService();
+
+  // 3. 로딩 중인지 체크하는 변수
+  bool _isLoading = false;
+
+  // 로그인 버튼 눌렀을 때 실행되는 함수
   void _handleLogin() async {
-    String phone = _phoneController.text.trim();
-    String pw = _pwController.text.trim();
-
-    if (phone.isEmpty || pw.isEmpty) {
-      Get.snackbar("알림", "정보를 모두 입력해주세요.", snackPosition: SnackPosition.BOTTOM);
+    // 빈칸 검사
+    if (_phoneController.text.isEmpty || _pwController.text.isEmpty) {
+      Get.snackbar("알림", "전화번호와 비밀번호를 모두 입력해주세요.", snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
-    // 로딩창 on
-    Get.dialog(
-        const Center(child: CircularProgressIndicator()),
-        barrierDismissible: false
+    // 로딩 시작
+    setState(() {
+      _isLoading = true;
+    });
+
+    // 엔진에 로그인 요청 (전화번호, 비번 던져줌)
+    final result = await _authService.login(
+        _phoneController.text,
+        _pwController.text
     );
 
-    // 로그인 시도
-    final result = await _authService.login(phone, pw);
+    // 로딩 끝
+    setState(() {
+      _isLoading = false;
+    });
 
-    // 로딩창 off
-    Get.back();
-
+    // 결과 확인
     if (result['success']) {
-      UserModel user = result['user'];
-      // 성공 알림
-      Get.snackbar("로그인 성공", "${user.name}님 환영합니다!",
-          backgroundColor: Colors.greenAccent, snackPosition: SnackPosition.TOP);
-      // 화면 이동
-      Get.offAll(() => const HomeScreen());
+      // 로그인 성공했으니, 유저 정보를 전역 저장소에 등록
+      // (Get.put을 쓰면 앱 어디서든 UserController를 찾을 수 있음)
+      final userController = Get.put(UserController());
+      userController.setUser(result['user']); // 유저 정보 저장 꾹!
 
+      // 성공! -> 메인 화면으로 이동
+      Get.offAll(() => const HomeScreen());
     } else {
-      // 실패 알림
-      Get.snackbar("로그인 실패", result['msg'],
-          backgroundColor: Colors.redAccent, colorText: Colors.white);
+      // 실패 (비번 틀림, 승인 대기 등) -> 에러 메시지 띄우기
+      Get.snackbar(
+        "로그인 실패",
+        result['msg'] ?? "오류가 발생했습니다.",
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
@@ -62,28 +71,30 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // 로고나 앱 이름
               const Icon(Icons.check_circle_outline, size: 80, color: Colors.blue),
               const SizedBox(height: 20),
-              const Text("출퇴근 체크", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const Text(
+                "출퇴근 체크",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 40),
 
               // 전화번호 입력
               TextField(
                 controller: _phoneController,
-                keyboardType: TextInputType.number, // only 키보드 숫자
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly // 숫자만 입력
-                ],
+                keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(
-                  labelText: "휴대폰 번호 (숫자만 입력)", // 안내 문구 변경
-                  border: OutlineInputBorder(),
+                  labelText: "휴대폰 번호",
                   prefixIcon: Icon(Icons.phone),
-                  hintText: "01012345678", // 힌트 텍스트 추가
+                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
@@ -91,77 +102,39 @@ class _LoginScreenState extends State<LoginScreen> {
               // 비밀번호 입력
               TextField(
                 controller: _pwController,
-                obscureText: true, // 비번 안 보이게
+                obscureText: true, // 글자 가리기
                 decoration: const InputDecoration(
                   labelText: "비밀번호",
-                  border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.lock),
+                  border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
 
               // 로그인 버튼
               SizedBox(
-                width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: _handleLogin,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                  child: const Text("로그인", style: TextStyle(color: Colors.white, fontSize: 16)),
+                  onPressed: _isLoading ? null : _handleLogin, // 로딩 중이면 클릭 금지
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white) // 로딩 중이면 뺑글이
+                      : const Text("로그인하기", style: TextStyle(fontSize: 16)),
                 ),
               ),
 
-              // 회원가입
-              const SizedBox(height: 10), //  버튼 사이 간격
+              const SizedBox(height: 16),
 
-              // 회원가입 버튼
+              // 회원가입 버튼 등 (일단 텍스트 버튼으로)
               TextButton(
                 onPressed: () {
-                  // 하단에서 올라오는 선택창 (Bottom Sheet)
-                  Get.bottomSheet(
-                    Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.all(20),
-                      height: 250, // 높이 적당히
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("회원가입 유형 선택",
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 20),
-
-                          // 선택 1: 사장님
-                          ListTile(
-                            leading: const Icon(Icons.store, size: 40, color: Colors.indigo),
-                            title: const Text("사장님으로 시작하기"),
-                            subtitle: const Text("회사를 새로 등록하고 관리합니다."),
-                            onTap: () {
-                              Get.back(); // 창 닫고
-                              Get.to(() => const CreateCompanyScreen()); // 회사 생성 화면으로!
-                            },
-                          ),
-                          const Divider(), // 구분선
-
-                          // 선택 2: 직원
-                          ListTile(
-                            leading: const Icon(Icons.person_search, size: 40, color: Colors.blue),
-                            title: const Text("직원으로 시작하기"),
-                            subtitle: const Text("이미 등록된 회사를 찾아 가입합니다."),
-                            onTap: () {
-                              Get.back(); // 창 닫고
-                              Get.to(() => const CompanyScreen()); // 회사 검색 화면으로!
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                    ),
-                  );
+                  // 나중에 회원가입 화면 연결
+                  // Get.to(() => const SignupScreen());
                 },
-                child: const Text("처음이신가요? 회원가입"),
+                child: const Text("아직 계정이 없으신가요? 회원가입"),
               ),
             ],
           ),
