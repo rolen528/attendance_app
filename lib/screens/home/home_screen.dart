@@ -26,6 +26,15 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.logout),
             onPressed: () {
               userController.clearUser();
+
+              Get.snackbar(
+                "알림",
+                "성공적으로 로그아웃 되었습니다.",
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Colors.grey[800], colorText: Colors.white,
+              );
+
+              // 로그인으로 이동
               Get.offAll(() => const LoginScreen());
             },
           )
