@@ -25,7 +25,7 @@ class UserController extends GetxController {
         "입력 오류",
         "아이디와 비밀번호를 입력해주세요.",
         backgroundColor: Colors.orange, colorText: Colors.white, // 눈에 띄게!
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
       return;
     }
@@ -53,7 +53,7 @@ class UserController extends GetxController {
         "로그인 성공",
         "${loggedInUser.name}님 환영합니다!",
         backgroundColor: Colors.green, colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
 
       // 홈으로 이동
@@ -65,7 +65,7 @@ class UserController extends GetxController {
         "로그인 실패",
         result['msg'], // AuthService가 준 에러 메시지 그대로 출력
         backgroundColor: Colors.red, colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
     }
   }

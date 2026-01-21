@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/user_controller.dart';
-// import '../../models/company_model.dart'; // 안쓰니까 삭제 또는 주석
+// import '../../models/company_model.dart'; //
 import '../company/company_screen.dart';
 import '../company/create_company_screen.dart'; // 사장님 가입 화면
-import 'signup_screen.dart'; // 직원 가입 화면 (혹시 나중에 쓸 수 있으니 유지)
+import 'signup_screen.dart'; // 직원 가입 화면
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
